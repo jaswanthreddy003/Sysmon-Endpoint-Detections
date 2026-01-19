@@ -2,30 +2,48 @@
 This section documents the PowerShell commands executed on the Windows VM to generate normal and suspicious process creation events (Sysmon Event ID 1) for analysis in Splunk.
 Normal PowerShell Activity:
 
-1-Get-Process
+1-
+```powershell
+Get-Process
+```
 <image>
 This command was executed to represent legitimate interactive PowerShell usage, commonly performed by administrators to view running processes on a system.
 
-2-Get-Service | Select-Object -First 5
+2-
+```powershell
+Get-Service | Select-Object -First 5
+```
 <image>
 This command was used to simulate routine system inspection tasks, such as checking service status, which administrators frequently perform using PowerShell.
 
-3-Get-ChildItem C:\Windows\System32 | Select-Object -First 5
+3-
+```powershell
+Get-ChildItem C:\Windows\System32 | Select-Object -First 5
+```
 <image>
 This command was executed to simulate filesystem enumeration using PowerShell, specifically targeting the C:\Windows\System32 directory, which contains critical system binaries and libraries.
-4-$var = "Hello"
+  
+```powershell
+$var = "Hello"
 Write-Output $var
+```
 <image4>
 This command demonstrates basic PowerShell variable assignment and output, which is commonly used in scripts, testing, automation.
 
-5-powershell.exe -ExecutionPolicy Bypass -NoProfile
+5-
+```powershell
+powershell.exe -ExecutionPolicy Bypass -NoProfile
+```
 <image5>
 This command launches a new PowerShell process while skipping user profile loading, bypassing PowerShell execution policy restrictions. It was executed to simulate modified PowerShell execution behavior that is commonly abused. This is high-risk PowerShell behavior and a strong detection signal.
 
-6-$cmd = "Get-Process"
+6-
+```powershell
+$cmd = "Get-Process"
 $bytes = [System.Text.Encoding]::Unicode.GetBytes($cmd)
 $encoded = [Convert]::ToBase64String($bytes)
 powershell.exe -EncodedCommand $encoded
+```
 <image 6>
 This sequence encodes a PowerShell command in Base64 and executes it using the -EncodedCommand flag to obscure the actual command.
 It was executed to simulate obfuscated PowerShell execution, a very common attacker technique.
@@ -33,8 +51,10 @@ Even though the decoded command (Get-Process) is benign, the execution method ma
 
 
 ----------------Splunk Command--------------------
+```splunk
 index=main host="DESKTOP-V1KMUJ6" source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1
 | table _time Image ParentImage CommandLine User IntegrityLevel
+```
 <image>
 This query retrieves Sysmon Event ID 1 (Process Creation) events from the specified Windows host and presents the most relevant fields needed to analyze PowerShell execution behavior.
 --------OUTPUT Explanation---------
