@@ -1,3 +1,6 @@
+This project demonstrates how Sysmon Event ID 1 (Process Creation) can be leveraged to detect and analyze PowerShell activity on a Windows endpoint using Splunk. The goal is to differentiate between normal administrative PowerShell usage and suspicious execution patterns commonly associated with attacker tradecraft. By generating controlled PowerShell commands and analyzing their telemetry in Splunk, this project highlights key indicators such as command-line arguments, parent-child process relationships, user context, and integrity levels. It also emphasizes the importance of identifying false positives to avoid alert fatigue and inaccurate detections. This repository serves as a practical SOC-focused walkthrough for understanding PowerShell abuse detection using Sysmon and Splunk.
+
+
 -------------Command Used to Generate PowerShell Telemetry-------------------------------
 
 This section documents the PowerShell commands executed on the Windows VM to generate normal and suspicious process creation events (Sysmon Event ID 1) for analysis in Splunk.
@@ -71,6 +74,8 @@ This query retrieves Sysmon Event ID 1 (Process Creation) events from the specif
 
 
 -----------------------------------Output------------------------------------------------
+
+
 ![Splunk Output Screenshot](Screenshots/Output1.jpeg)
 
 ![Splunk Output Screenshot](Screenshots/Output2.jpeg)
@@ -86,6 +91,8 @@ Another suspicious event involves PowerShell being launched with both -Execution
 A third notable event shows an interactive PowerShell session running with High integrity under the administrative user account without being spawned by a system service. While elevated PowerShell sessions can be legitimate, their presence alongside encoded and execution policy bypassed commands significantly increases suspicion. In a SOC environment, this would be treated as corroborating evidence within a broader attack chain rather than an isolated benign event.
 
 This analysis demonstrates how PowerShell abuse is identified not by its presence alone, but by execution context, integrity level, user account, and command-line behavior. Differentiating baseline system noise from high-risk PowerShell execution patterns is critical for effective endpoint detection engineering.
+
+In this dataset, several PowerShell-related process creation events may appear suspicious at first glance but are actually false positives when proper context is applied. A common example is powershell.exe executed with High Integrity Level by a legitimate user account. While high integrity is often associated with elevated privileges and attacker activity, in this case it occurred because the user launched PowerShell as Administrator, which is a normal administrative action during system inspection or testing. Another false positive observed is PowerShell being spawned by trusted parent processes such as RuntimeBroker.exe or explorer.exe. These parent-child relationships are common in normal Windows operations and do not indicate malicious behavior by themselves. Additionally, PowerShell executions without malicious flags (such as -EncodedCommand or -ExecutionPolicy Bypass) and without suspicious network or file activity should be treated as benign administrative usage. This demonstrates why PowerShell detections must always be correlated with command-line arguments, parent process, user context, and integrity level before concluding malicious intent.
 
 
 
