@@ -42,7 +42,7 @@ This command demonstrates basic PowerShell variable assignment and output, which
 ```powershell
 powershell.exe -ExecutionPolicy Bypass -NoProfile
 ```
-<image5>
+![PowerShell Screenshot](Screenshots/5.jpeg)
 
 This command launches a new PowerShell process while skipping user profile loading, bypassing PowerShell execution policy restrictions. It was executed to simulate modified PowerShell execution behavior that is commonly abused. This is high-risk PowerShell behavior and a strong detection signal.
 
@@ -53,7 +53,7 @@ $bytes = [System.Text.Encoding]::Unicode.GetBytes($cmd)
 $encoded = [Convert]::ToBase64String($bytes)
 powershell.exe -EncodedCommand $encoded
 ```
-<image 6>
+![PowerShell Screenshot](Screenshots/6.jpeg)
 
 This sequence encodes a PowerShell command in Base64 and executes it using the -EncodedCommand flag to obscure the actual command.
 It was executed to simulate obfuscated PowerShell execution, a very common attacker technique.
@@ -65,16 +65,18 @@ Even though the decoded command (Get-Process) is benign, the execution method ma
 index=main host="DESKTOP-V1KMUJ6" source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1
 | table _time Image ParentImage CommandLine User IntegrityLevel
 ```
-<image>
+![Splunk Command Screenshot](Screenshots/Splunk.jpeg)
 
 This query retrieves Sysmon Event ID 1 (Process Creation) events from the specified Windows host and presents the most relevant fields needed to analyze PowerShell execution behavior.
 
 
 --------OUTPUT Explanation---------
+![Splunk Output Screenshot](Screenshots/Output1.jpeg)
 
-<Image of output1 and 2 >
+![Splunk Output Screenshot](Screenshots/Output2.jpeg)
 
 The majority of the observed process creation events represent normal system and service-driven activity. Multiple PowerShell executions are initiated by the Splunk Universal Forwarder binaries such as splunk-powershell.exe, splunk-regmon.exe, and splunk-netmon.exe, all running under the NT AUTHORITY\SYSTEM account with System integrity level. These processes are expected as part of Splunk’s internal monitoring and data collection operations. Additional system processes like taskhostw.exe, usoclient.exe, and svchost.exe are also present and indicate routine Windows background activity. The absence of suspicious PowerShell flags such as encoded commands or execution policy bypass confirms that these events form part of normal baseline noise rather than malicious behavior.
+
 
 One of the observed PowerShell executions includes the -EncodedCommand parameter and runs under the interactive user account DESKTOP-V1KMUJ6\admin with a High integrity level. The use of Base64-encoded commands is a well-known obfuscation technique designed to hide the true intent of execution from logs and analysts. Although the decoded command in this case is benign, the execution method itself is highly suspicious because encoded PowerShell commands are commonly used in malware delivery and post-exploitation frameworks.
 
