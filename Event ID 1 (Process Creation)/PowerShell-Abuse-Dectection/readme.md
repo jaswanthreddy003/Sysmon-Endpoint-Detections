@@ -16,7 +16,7 @@ This command was executed to represent legitimate interactive PowerShell usage, 
 ```powershell
 Get-Service | Select-Object -First 5
 ```
-<image>
+![PowerShell Screenshot](Screenshots/2.jpeg)
 
 This command was used to simulate routine system inspection tasks, such as checking service status, which administrators frequently perform using PowerShell.
 
@@ -24,7 +24,7 @@ This command was used to simulate routine system inspection tasks, such as check
 ```powershell
 Get-ChildItem C:\Windows\System32 | Select-Object -First 5
 ```
-<image>
+![PowerShell Screenshot](Screenshots/3.jpeg)
 
 This command was executed to simulate filesystem enumeration using PowerShell, specifically targeting the C:\Windows\System32 directory, which contains critical system binaries and libraries.
 
@@ -33,8 +33,7 @@ This command was executed to simulate filesystem enumeration using PowerShell, s
 $var = "Hello"
 Write-Output $var
 ```
-
-<image4>
+![PowerShell Screenshot](Screenshots/4.jpeg)
 
 This command demonstrates basic PowerShell variable assignment and output, which is commonly used in scripts, testing, automation.
 
