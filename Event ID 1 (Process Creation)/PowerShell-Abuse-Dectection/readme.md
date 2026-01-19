@@ -1,4 +1,4 @@
---------Command Used to Generate PowerShell Telemetry-------------------------
+-------------Command Used to Generate PowerShell Telemetry-------------------------------
 
 This section documents the PowerShell commands executed on the Windows VM to generate normal and suspicious process creation events (Sysmon Event ID 1) for analysis in Splunk.
 Normal PowerShell Activity:
@@ -60,7 +60,7 @@ It was executed to simulate obfuscated PowerShell execution, a very common attac
 Even though the decoded command (Get-Process) is benign, the execution method makes this a strong malicious indicator.
 
 
-----------------Splunk Command--------------------
+------------------------------Splunk Command---------------------------------------------
 ```splunk
 index=main host="DESKTOP-V1KMUJ6" source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1
 | table _time Image ParentImage CommandLine User IntegrityLevel
@@ -70,7 +70,7 @@ index=main host="DESKTOP-V1KMUJ6" source="XmlWinEventLog:Microsoft-Windows-Sysmo
 This query retrieves Sysmon Event ID 1 (Process Creation) events from the specified Windows host and presents the most relevant fields needed to analyze PowerShell execution behavior.
 
 
---------OUTPUT Explanation---------
+-----------------------------------Output------------------------------------------------
 ![Splunk Output Screenshot](Screenshots/Output1.jpeg)
 
 ![Splunk Output Screenshot](Screenshots/Output2.jpeg)
