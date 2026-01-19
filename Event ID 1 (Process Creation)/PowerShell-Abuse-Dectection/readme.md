@@ -8,7 +8,7 @@ Normal PowerShell Activity:
 ```powershell
 Get-Process
 ```
-<image>
+![PowerShell Screenshot](Screenshots/1.jpeg)
 
 This command was executed to represent legitimate interactive PowerShell usage, commonly performed by administrators to view running processes on a system.
 
