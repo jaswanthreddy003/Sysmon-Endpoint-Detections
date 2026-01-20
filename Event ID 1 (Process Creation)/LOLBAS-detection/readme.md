@@ -57,6 +57,7 @@ index=main source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
 
 ![PowerShell Screenshot](Screenshots/LotL_Splunk.jpeg)
 
+
 The Splunk search query is designed to identify high-risk Living Off the Land (LotL) techniques by monitoring for suspicious certutil.exe process activity. The query specifically targets Ingress Tool Transfer (T1105) and Deobfuscation (T1140) by filtering for command-line arguments such as -urlcache, -f, -verifyctl, and -URL, which are commonly used by adversaries to download or decode malicious payloads while bypassing standard security controls. To ensure the detection is resilient against evasion, the logic uses the OriginalFileName field in addition to the process name. This is a critical industry-level best practice because it allows the SIEM to identify the binary even if an attacker renames certutil.exe to a benign-looking filename like taskhost.exe.
 
 ****False Positive Reduction and Tuning****
@@ -65,6 +66,7 @@ A primary goal of this query is to achieve High-Fidelity alerting by minimizing 
 ****Proof of Detection ((How I Verified the Alerts)****
 
 ![PowerShell Screenshot](Screenshots/LotL_Alert.jpeg)
+
 
 After setting up the logic, I needed to make sure the alerts actually fired when the "attack" happened. I ran the three certutil.exe commands manually—specifically the ones using -urlcache, -verifyctl, and -URL. As soon as I executed them, my LotL_certutil alert caught them in real-time. Looking at my Triggered Alerts dashboard, I could see three separate critical events pop up at 14:29:01, 14:30:00, and 14:31:00 IST, which perfectly matched the timing of my manual testing.
 
